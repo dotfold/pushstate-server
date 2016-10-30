@@ -6,6 +6,7 @@ var serveStatic = require('serve-static')
 var serveStaticFile = require('connect-static-file')
 var compression = require('compression')
 var app = connect()
+var httpProxy = require('http-proxy-middleware')
 
 const PORT = 9000
 const DIRECTORY = 'public'
@@ -18,6 +19,7 @@ exports.start = function (options, _onStarted) {
   let directory = options.directory || DIRECTORY
   let directories = options.directories || [directory]
   let file = options.file || FILE
+  let proxy = options.proxy
   let onStarted = _onStarted || function () {}
 
   app.use(compression())
@@ -29,6 +31,21 @@ exports.start = function (options, _onStarted) {
 
   // Then, serve the fallback file
   app.use(serveStaticFile(path.join(directory, file)))
+
+  if (proxy && typeof proxy === 'string') {
+    var mayProxy = /^(?!\/(index\.html$)).*$/
+    app.use(mayProxy,
+      // Pass the scope regex both to Express and to the middleware for proxying
+      // of both HTTP and WebSockets to work without false positives.
+      httpProxy(pathname => mayProxy.test(pathname), {
+        target: proxy,
+        logLevel: 'debug',
+        onError: function (proxy) { console.log(proxy) },
+        secure: false,
+        changeOrigin: true
+      })
+    )
+  }
 
   return app.listen(port, function (err) {
     onStarted(err, port)
