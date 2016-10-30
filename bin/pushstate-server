@@ -10,7 +10,8 @@ if (process.argv[2] == '-h' || process.argv[2] == '--help') {
 server.start({
   directory: process.argv[2],
   port: process.argv[3],
-  file: process.argv[4]
+  file: process.argv[4],
+  proxy: process.argv[5]
 }, function(err, port) {
     console.log(`Listening on port ${port} (http://localhost:${port})`);
 });
