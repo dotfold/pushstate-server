@@ -17,14 +17,17 @@
     "server"
   ],
   "author": "Scott Corgan",
+  "contributors": [
+    "James McNamee <james@dotfold.io>"
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/dotfold/pushstate-server/issues"
   },
   "dependencies": {
     "compression": "^1.1.0",
-    "connect": "^3.2.0",
     "connect-static-file": "^1.1.2",
+    "express": "^4.14.0",
     "http-proxy-middleware": "^0.17.2",
     "serve-static": "^1.6.2"
   },
